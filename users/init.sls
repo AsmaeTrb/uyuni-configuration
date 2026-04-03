@@ -1,3 +1,5 @@
+include:
+  - groups
 create_admin_pfe:
   user.present:
     - name: admin_pfe
