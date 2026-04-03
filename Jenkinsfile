@@ -6,7 +6,7 @@ pipeline {
             steps {
                 sshagent(['salt-ssh']) {
                     sh '''
-                        ssh -o StrictHostKeyChecking=no root@192.168.78.129 \
+                        ssh -o StrictHostKeyChecking=no root@192.168.78.200 \
                         "mgrctl exec -- salt '*' state.apply motd"
                     '''
                 }
