@@ -1,16 +1,30 @@
-enable_services:
-  service.enabled:
-    - names: {{ pillar.get('services:common_enable', [])}}
-running_services:
+{%- for srv in salt['pillar.get']('services_common:running', []) %}
+service_running_{{ srv }}:
   service.running:
-    - names: {{ pillar.get('services:common_running', [])}}
+    - name: {{ srv }}
     - enable: True
     - require:
-      - sls: mypackages 
+      - sls: mypackages
       - sls: myconfigs
-disable_services:
-  service.disabled:
-    - names: {{ pillar.get('services:common_disable', [])}}
-dead_services:
+{%- endfor %}
+
+{%- for srv in salt['pillar.get']('services_common:dead', []) %}
+service_dead_{{ srv }}:
   service.dead:
-    - names: {{ pillar.get('services:common_dead', [])}}
+    - name: {{ srv }}
+    - enable: False
+{%- endfor %}
+{%- for srv in salt['pillar.get']('services_os:running', []) %}
+service_running_{{ srv }}:
+  service.running:
+    - name: {{ srv }}
+    - enable: True
+{%- endfor %}
+{%- for srv in salt['pillar.get']('services_common:dead', []) %}
+service_dead_{{ srv }}:
+  service.dead:
+    - name: {{ srv }}
+    - enable: True
+{%- endfor %}
+
+
