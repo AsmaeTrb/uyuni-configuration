@@ -4,4 +4,5 @@ base:
     - myconfigs
     - myservices
     - myusers
-    - mysecurity       
+    - mysecurity      
+    - mycrons 

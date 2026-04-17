@@ -12,7 +12,7 @@ service_common_running_{{ srv }}:
    {%- if srv in salt['pillar.get']('services_common:watch',{}) %}
     - watch:
       - file: {{ salt['pillar.get']('services_common:watch:'~ srv )}}
-  {% endif %}
+  {%- endif %}
      
 {%- endfor %}
 
@@ -28,15 +28,16 @@ service_os_running_{{ srv }}:
   service.running:
     - name: {{ srv }}
     - enable: True
-  {% if srv in salt['pillar.get']('services_os:watch',{}) %} 
+  {%- if srv in salt['pillar.get']('services_os:watch',{}) %} 
     - watch:
       - file: {{ salt['pillar.get']('services_os:watch:'~ srv) }}
-  {% endif %}
+  {%- endif %}
 {%- endfor %}
 {%- for srv in salt['pillar.get']('services_os:dead', []) %}
 service_os_dead_{{ srv }}:
   service.dead:
     - name: {{ srv }}
+    - enable: False
 {%- endfor %}
 {%- for srv in salt['pillar.get']('services_host:running', []) %}
 service_host_running_{{ srv }}:
@@ -46,5 +47,5 @@ service_host_running_{{ srv }}:
   {%- if srv in salt['pillar.get']('services_host:watch',{}) %}
     - watch:
       - file: {{ salt['pillar.get']('services_host:watch:'~ srv) }}
-  {% endif %}
+  {%- endif %}
 {%- endfor %}
