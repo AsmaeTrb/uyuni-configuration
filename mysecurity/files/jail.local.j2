@@ -1,20 +1,16 @@
-{% set fb = salt['pillar.get']('fail2ban', {}) %}
-
+{%- set fb_default= salt['pillar.get']('fail2ban_common:default',{}) %}
 [DEFAULT]
-bantime  = {{ fb.get('bantime', 600) }}
-findtime = {{ fb.get('findtime', 600) }}
-maxretry = {{ fb.get('maxretry', 5) }}
-ignoreip = {{ fb.get('ignoreip', ['127.0.0.1/8']) | join(' ') }}
-
-{% for jailname, jdata in fb.get('jails', {}).items() %}
-[{{ jailname }}]
-enabled  = {{ jdata.get('enabled', true) }}
-port     = {{ jdata.get('port', 22) }}
-maxretry = {{ jdata.get('maxretry', 3) }}
-bantime  = {{ jdata.get('bantime', 3600) }}
-{% if grains['os_family'] == 'Debian' %}
-logpath  = /var/log/auth.log
-{% else %}
-logpath  = /var/log/secure
-{% endif %}
-{% endfor %}
+bantime= {{fb_default.get('bantime','20')}}
+findtime= {{fb_default.get('findtime','20')}}
+maxretry= {{fb_default.get('maxretry','6')}}
+ignoreip= {{fb_default.get('ignoreip',[]) | join(' ')}}
+backend  = {{ fb_default.get('backend', 'systemd') }}
+{%- for jails,udate in  salt['pillar.get']('fail2ban_common:jails',{}).items() %}
+[{{ jails }}]
+bantime= {{udate.get('bantime','20')}}
+findtime= {{udate.get('findtime','20')}}
+maxretry= {{udate.get('maxretry','6')}}
+ignoreip= {{udate.get('ignoreip',[])}}
+enabled  = {{ udate.get('enabled', true) }}
+port     = {{ udate.get('port', 22) }}
+{%- endfor %}
