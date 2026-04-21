@@ -1,6 +1,6 @@
 Port {{ pillar['ssh']['port']}}
 PermitRootLogin {{ pillar['ssh']['permit_root_login']}}
 PasswordAuthentication {{ pillar['ssh']['password_auth']}}
-AllowUsers {% for user in pillar['ssh']['allowed_users']%} {{user}}
+AllowUsers {% for user in pillar.get('ssh', {}).get('allowed_users', []) %} {{ user }}
 {% endfor %}
 

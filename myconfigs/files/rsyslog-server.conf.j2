@@ -1,0 +1,7 @@
+{%- set rs = salt['pillar.get']('rsyslog', {}) %}
+{%- set srv = salt['pillar.get']('rsyslog_server', {}) %}
+
+module(load="imtcp")
+input(type="imtcp" port="{{ rs.get('port', 514) }}")
+$template RemoteLogs,"{{ srv.get('logdir', '/var/log/remote') }}/%HOSTNAME%/%PROGRAMNAME%.log"
+*.* ?RemoteLogs

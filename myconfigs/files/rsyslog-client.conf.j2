@@ -1,0 +1,2 @@
+{%- set rs = salt['pillar.get']('rsyslog', {}) %}
+*.* @@{{ rs.get('server', '127.0.0.1') }}:{{ rs.get('port', 514) }}
